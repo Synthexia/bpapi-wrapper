@@ -1,0 +1,28 @@
+{
+  "name": "@nightnutsky/bpapi",
+  "version": "1.0.2",
+  "description": "BPAPI allows you to retrieve and work with information from BDFD Public API more easier",
+  "author": "NightNutSky",
+  "main": "dist/index.js",
+  "types": "types/types.d.ts",
+  "repository": {
+    "url": "https://github.com/NightNutSky/bpapi"
+  },
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "keywords": [
+    "bdfd",
+    "bdfdapi",
+    "bdfd-api",
+    "bdfdpublicapi",
+    "bdfd-public-api"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "2.6.7"
+  },
+  "devDependencies": {
+    "@types/node-fetch": "2.6.3"
+  }
+}
