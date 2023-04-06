@@ -11,20 +11,20 @@ To get started, you should import/require BPAPI:
 - JavaScript
     - Require all functions:
         ```js
-        const bpapi = require("bpapi");
+        const bpapi = require("@nightnutsky/bpapi");
         ```
     - Require particular function(s):
         ```js
-        const { functionInfo } = require("bpapi");
+        const { functionInfo } = require("@nightnutsky/bpapi");
         ```
 - TypeScript
     - Import all functions:
         ```ts
-        import * as bpapi from "bpapi";
+        import * as bpapi from "@nightnutsky/bpapi";
         ```
     - Import particular function(s):
         ```ts
-        import { functionInfo } from "bpapi";
+        import { functionInfo } from "@nightnutsky/bpapi";
         ```
 ## Code Examples
 
