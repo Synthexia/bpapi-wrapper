@@ -108,7 +108,7 @@ export interface FunctionArguments {
      * 19. `desc`, `asc`
      * 20. `user`, `server`, `globaluser`, `channel`
      */
-    enumData: ArgumentEnumData;
+    enumData?: ArgumentEnumData;
 }
 
 export type GetFunctionInfo = Promise<FunctionInfo | undefined>;
@@ -130,4 +130,48 @@ export declare function functionList(): GetFunctionList;
  * 
  * @returns A promise containing an array of function tags
  */
-export declare function functionTagList(): GetFunctionTagList;
+export declare const functionTagList: () => GetFunctionTagList;
+
+export interface PublicAPIResponse {
+    /**
+     * The tag of the function
+     */
+    tag: FunctionTag;
+    /**
+     * The description of the function
+     */
+    shortDescription: FunctionDescription;
+    /**
+     * The description of the function?
+     * 
+     * *It was never used*
+     */
+    longDescription: FunctionArguments;
+    /**
+     * The arguments of the function
+     */
+    arguments: FunctionArguments | null;
+    /**
+     * The intents of the function
+     * 
+     * 0 = None
+     * 
+     * 2 = Members
+     * 
+     * 256 = Intents
+     */
+    intents: 0 | 2 | 256;
+    /**
+     * Whether the function requires premium hosting time
+     */
+    premium: boolean;
+    /**
+     * Unknown
+     * 
+     * *It was never used*
+     */
+    color: 0;
+}
+
+export type PublicAPIRequest = Promise<PublicAPIResponse | PublicAPIResponse[] | string[] | undefined>;
+export type FindFunction = Promise<string | undefined>;

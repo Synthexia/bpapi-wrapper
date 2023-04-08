@@ -1,35 +1,76 @@
-import fetch from "node-fetch";
+import * as centra from "centra";
 import type {
     Endpoint,
+    FindFunction,
     FunctionInfo,
     FunctionIntents,
     FunctionTag,
     GetFunctionInfo,
     GetFunctionList,
-    GetFunctionTagList
+    GetFunctionTagList,
+    PublicAPIRequest,
+    PublicAPIResponse
 } from "../types/types";
+import {
+    API,
+    ENDPOINT,
+    ENDPOINT_PATH,
+    INTENTS,
+    RAW_INTENTS
+} from "./consts";
 
-async function request(endpoint: Endpoint, functionTag?: FunctionTag) {
-    const api = 'https://botdesignerdiscord.com/public/api/';
-
-    if (endpoint == 'function') {
-        const tag = await findFunction(functionTag as FunctionTag);
-        if (tag) {
-            return fetch(api + `function/${tag}`);
-        } else {
-            return undefined;
-        }
-    } else if (endpoint == 'functionList') {
-        return fetch(api + 'function_list');
-    } else {
-        return fetch(api + 'function_tag_list');
+async function request(endpoint: Endpoint, functionTag?: FunctionTag): PublicAPIRequest {
+    let req: centra.Response;
+    let data: PublicAPIResponse | PublicAPIResponse[] | string[];
+    switch (endpoint) {
+        case ENDPOINT.Function:
+            const tag = await findFunction(functionTag!);
+            if (tag) {
+                req = await centra(API + ENDPOINT_PATH.Function + tag).send();
+                data = await req.json();
+                return <PublicAPIResponse>data;
+            } else {
+                return;
+            }
+        case ENDPOINT.FunctionList:
+            req = await centra(API + ENDPOINT_PATH.FunctionList).send();
+            data = await req.json();
+            return <PublicAPIResponse[]>data;
+        case ENDPOINT.FunctionTagList:
+            req = await centra(API + ENDPOINT_PATH.FunctionTagList).send();
+            data = await req.json();
+            return <string[]>data;
     }
 }
-async function findFunction(functionTag: FunctionTag) {
+
+async function findFunction(functionTag: FunctionTag): FindFunction {
     const tags = await functionTagList();
     for (const tag of tags) {
-        if (tag.includes(functionTag)) return tag as FunctionTag;
+        if (tag.includes(functionTag)) return tag;
     }
+}
+
+function intentsSwitcher(functionIntents: number) {
+    let intents: FunctionIntents = INTENTS.None;
+    switch (functionIntents) {
+        case RAW_INTENTS.Presence:
+            intents = INTENTS.Presence;
+            break;
+        case RAW_INTENTS.Members:
+            intents = INTENTS.Members;
+            break;
+    }
+    return intents;
+}
+
+function buildFunctionInfo(publicAPIResponse: PublicAPIResponse): FunctionInfo {
+    return {
+        tag: publicAPIResponse.tag,
+        description: publicAPIResponse.shortDescription,
+        arguments: publicAPIResponse.arguments,
+        intents: intentsSwitcher(publicAPIResponse.intents),
+        premium: publicAPIResponse.premium
+    };
 }
 
 /**
@@ -38,29 +79,11 @@ async function findFunction(functionTag: FunctionTag) {
  * @returns A promise containing information about the specified function. If function wasn't found, returns `undefined`.
  */
 export async function functionInfo(functionTag: FunctionTag): GetFunctionInfo {
-    const data = (await request('function', functionTag));
+    const data = await request(ENDPOINT.Function, functionTag) as PublicAPIResponse | undefined;
     if (data) {
-        const functionInfo = await data.json();
-
-        let intents: FunctionIntents;
-        if (functionInfo.intents == 256) {
-            intents = 'Presence'
-        } else if (functionInfo.intents == 2) {
-            intents = 'Members'
-        } else {
-            intents = 'None'
-        }
-
-        const res = {
-            tag: functionInfo.tag,
-            description: functionInfo.shortDescription,
-            arguments: functionInfo.arguments,
-            intents: intents,
-            premium: functionInfo.premium
-        } as FunctionInfo;
-        return res;
+        return buildFunctionInfo(data);
     } else {
-        return undefined;
+        return;
     }
 }
 /**
@@ -68,26 +91,11 @@ export async function functionInfo(functionTag: FunctionTag): GetFunctionInfo {
  * @returns A promise containing an array of functions with their information
  */
 export async function functionList(): GetFunctionList {
-    const data = (await (await request('functionList'))?.json());
-    const res = [] as FunctionInfo[];
+    const data = await request(ENDPOINT.FunctionList) as PublicAPIResponse[];
+    const res: FunctionInfo[] = [];
 
     for (const functionInfo of data) {
-        let intents: FunctionIntents;
-        if (functionInfo.intents == 256) {
-            intents = 'Presence'
-        } else if (functionInfo.intents == 2) {
-            intents = 'Members'
-        } else {
-            intents = 'None'
-        }
-
-        res.push({
-            tag: functionInfo.tag,
-            description: functionInfo.shortDescription,
-            arguments: functionInfo.arguments,
-            intents: intents,
-            premium: functionInfo.premium,
-        });
+        res.push(buildFunctionInfo(functionInfo));
     }
     return res;
 }
@@ -95,7 +103,4 @@ export async function functionList(): GetFunctionList {
  * 
  * @returns A promise containing an array of function tags
  */
-export async function functionTagList(): GetFunctionTagList {
-    const data = (await (await request('functionTagList'))?.json()) as string[];
-    return data;
-}
+export const functionTagList = async (): GetFunctionTagList => await request(ENDPOINT.FunctionTagList) as string[];

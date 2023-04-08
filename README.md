@@ -1,4 +1,9 @@
 # BPAPI
+
+[![NPM: Version](https://img.shields.io/npm/v/@nightnutsky/bpapi?logo=npm&style=for-the-badge)](https://www.npmjs.com/package/@nightnutsky/bpapi)
+[![GitHub: Stars](https://img.shields.io/github/stars/NightNutSky/bpapi?logo=github&style=for-the-badge)](https://github.com/NightNutSky/bpapi/stargazers)
+[![GitHub: Source Code](https://img.shields.io/badge/Source%20Code-GitHub-green?logo=github&style=for-the-badge)](https://github.com/NightNutSky/bpapi)
+
 BPAPI allows you to retrieve and work with information from [BDFD](https://botdesignerdiscord.com) [Public API](https://nilpointer-software.github.io/bdfd-wiki/nightly/resources/api.html) more easier.
 
 # Install
@@ -82,6 +87,19 @@ functionTagList().then(tagList => {
     }
 });
 ```
+## TypeScript Specials
+If you ever worked with TypeScript, then you know that you can (and sometimes must) assign types for your consts, etc.
+
+If you want to work with plain BDFD Public API, for example, do request to the `api/function_list` endpoint  yourself, BPAPI can help you using one of its type - `PublicAPIResponse`.\
+Import this type and assign it to the request's response.
+
+> Original BDFD Public API's response is a bit different and contains unused or deprecated (and now unused) properties. Unlike BDFD Public API, BPAPI only shows actual and a bit modified properties for your comfort.
+
+| Showcase |
+| :------: |
+| ![Showcase](https://user-images.githubusercontent.com/70456337/230720560-c425f057-d09c-4e91-8f68-8f9312d07455.png) |
+| ![Showcase](https://user-images.githubusercontent.com/70456337/230720600-f89d6185-ae72-47c8-ab37-cee6f1d6a9e5.png) |
+
 
 ## Raw Returns
 
