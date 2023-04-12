@@ -4,6 +4,14 @@
 
 ### April
 
+#### 2.0.0
+- Source Code Refactoring
+- Implemented Callbacks Endpoint
+- Updated README
+    - Updated style
+    - Updated `TypeScript Specials` article
+    - Updated examples
+
 #### 1.1.0
 - Source Code Refactoring
 - Dependencies Switch

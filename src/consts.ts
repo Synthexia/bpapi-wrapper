@@ -10,12 +10,30 @@ export const RAW_INTENTS = Object.freeze({
     None: 0
 });
 export const ENDPOINT = Object.freeze({
-    Function: 'function',
-    FunctionList: 'functionList',
-    FunctionTagList: 'functionTagList'
+    Functions: {
+        Info: 'function' as 'function',
+        List: 'functionList' as 'functionList',
+        TagList: 'functionTagList' as 'functionTagList'
+    },
+    Callbacks: {
+        Info: 'callback' as 'callback',
+        List: 'callbackList' as 'callbackList',
+        TagList: 'callbackTagList' as 'callbackTagList'
+    }
 });
 export const ENDPOINT_PATH = Object.freeze({
-    Function: 'function/',
-    FunctionList: 'function_list',
-    FunctionTagList: 'function_tag_list'
+    Functions: {
+        Info: 'function/',
+        List: 'function_list',
+        TagList: 'function_tag_list'
+    },
+    Callbacks: {
+        Info: 'callback/',
+        List: 'callback_list',
+        TagList: 'callback_tag_list'
+    }
+});
+export const REQUEST_TYPE = Object.freeze({
+    Functions: 'functions',
+    Callbacks: 'callbacks'
 });

@@ -5,6 +5,7 @@
         "target": "ESNext",
         "strict": true,
         "outDir": "dist",
-        "rootDir": "src"        
-    }
+        "rootDir": "src"   
+    },
+    "exclude": ["ignore"]
 }

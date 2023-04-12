@@ -1,10 +1,16 @@
+
+<div align="center">
+
 # BPAPI
 
 [![NPM: Version](https://img.shields.io/npm/v/@nightnutsky/bpapi?logo=npm&style=for-the-badge)](https://www.npmjs.com/package/@nightnutsky/bpapi)
 [![GitHub: Stars](https://img.shields.io/github/stars/NightNutSky/bpapi?logo=github&style=for-the-badge)](https://github.com/NightNutSky/bpapi/stargazers)
 [![GitHub: Source Code](https://img.shields.io/badge/Source%20Code-GitHub-green?logo=github&style=for-the-badge)](https://github.com/NightNutSky/bpapi)
 
-BPAPI allows you to retrieve and work with information from [BDFD](https://botdesignerdiscord.com) [Public API](https://nilpointer-software.github.io/bdfd-wiki/nightly/resources/api.html) more easier.
+BPAPI allows you to work with [BDFD](https://botdesignerdiscord.com) [Public API](https://nilpointer-software.github.io/bdfd-wiki/nightly/resources/api.html) more easier and pretty!
+
+</div>
+
 
 # Install
 ```sh
@@ -22,7 +28,7 @@ To get started, you should import/require BPAPI:
         ```js
         const { functionInfo } = require("@nightnutsky/bpapi");
         ```
-- TypeScript
+- TypeScript (Recommended to use)
     - Import all functions:
         ```ts
         import * as bpapi from "@nightnutsky/bpapi";
@@ -31,191 +37,96 @@ To get started, you should import/require BPAPI:
         ```ts
         import { functionInfo } from "@nightnutsky/bpapi";
         ```
-## Code Examples
+## Some Code Examples
 
-### functionInfo()
-```js
-/**
- * 
- * @param functionTag A tag (i.e `$addButton[]`, `$nomention`) of the function. Supports non-completed tags (i.e `$addBu` will be represented as `$addButton[]`)
- * @returns A promise containing information about the specified function. If could't find the function, `undefined` is returned.
- */
+### BDFD Functions
+
+```ts
 functionInfo('$replaceT').then(info => {
     if (info) {
-        const tag = info.tag,
-        description = info.description,
-        intents = info.intents;
-
-        console.log(`${tag}:\nDescription: ${description}\nIntents: ${intents}`);
+        const {
+            description,
+            intents,
+            tag
+        } = info;
+        someFunction(RESPONSE.Success, `The function with the \`${tag}\` tag has the following description: \`${description}\` and requires ${intents} intents.`);
     } else {
-        console.log('Could not find the specified function!')
+        someFunction(RESPONSE.Fail, 'Could not find the function!');
     }
 });
 ```
 
-### functionList()
-```js
-/**
- * 
- * @returns A promise containing an array of functions with their information
- */
-functionList().then(list => {
-    console.log('Functions That Require Intents:');
-    for (const functionInfo of list) {
-        if (functionInfo.intents != 'None') {
-            const tag = functionInfo.tag,
-            intents = functionInfo.intents;
+### BDFD Callbacks
 
-            console.log(`${tag}: ${intents} Intent`);
-        }
+```ts
+callbackInfo('$onJ').then(info => {
+    if (info) {
+        const {
+            name
+        } = info;
+        const premium = info.premium ? 'requires' : "doesn't require";
+        someFunction(RESPONSE.Success, `The callback with the \`${name}\` name ${premium} premium hosting time.`);
+    } else {
+        someFunction(RESPONSE.Fail, 'Could not find the callback!');
     }
 });
 ```
 
-### functionTagList()
-```js
-/**
- * 
- * @returns A promise containing an array of function tags
- */
-functionTagList().then(tagList => {
-    console.log('Functions That Start With "n":');
-    for (const functionTag of tagList) {
-        if (functionTag.includes('$n')) {
-            console.log(functionTag);
-        }
-    }
-});
-```
 ## TypeScript Specials
 If you ever worked with TypeScript, then you know that you can (and sometimes must) assign types for your consts, etc.
 
-If you want to work with plain BDFD Public API, for example, do request to the `api/function_list` endpoint  yourself, BPAPI can help you using one of its type - `PublicAPIResponse`.\
-Import this type and assign it to the request's response.
+### Types For BDFD Public API
+If you want to work with plain BDFD Public API, for example, do request to endpoints  yourself, BPAPI can help you using types.
 
-> Original BDFD Public API's response is a bit different and contains unused or deprecated (and now unused) properties. Unlike BDFD Public API, BPAPI only shows actual and a bit modified properties for your comfort.
+Currently, BPAPI has types for request's responses - `FunctionsResponse` and `CallbacksResponse`.
 
-| Showcase |
-| :------: |
-| ![Showcase](https://user-images.githubusercontent.com/70456337/230720560-c425f057-d09c-4e91-8f68-8f9312d07455.png) |
-| ![Showcase](https://user-images.githubusercontent.com/70456337/230720600-f89d6185-ae72-47c8-ab37-cee6f1d6a9e5.png) |
+#### `FunctionsResponse`
 
+![FunctionsResponse](https://user-images.githubusercontent.com/70456337/231560564-e590a2e4-5b40-4ee3-a39d-f41362c98e1f.png)
 
-## Raw Returns
+#### `CallbacksResponse`
 
-<details><summary>Expand</summary>
+![CallbacksResponse](https://user-images.githubusercontent.com/70456337/231560588-3c6fd4c7-e0da-4818-89c1-d99b5b8d4a2b.png)
 
-### functionInfo()
-```json
-{
-    "tag": "$replaceText[Text;Sample;New;(Amount)]",
-    "description": "Replaces 'sample' from 'text' to 'new' 'how many' times. Set 'how many' to -1 to replace everything",
-    "arguments": [
-        {
-            "name": "Text",
-            "type": "String",
-            "required": true,
-            "empty": true
-        },
-        {
-            "name": "Sample",
-            "type": "String",
-            "required": true,
-            "empty": true
-        },
-        {
-            "name": "New",
-            "type": "String",
-            "required": true,
-            "empty": true
-        },
-        {
-            "name": "Amount",
-            "type": "Integer",
-            "required": false
+### Types For Enums
+
+As you should know, some BDScript functions have arguments and these arguments have enums.\
+BPAPI will help to work with them as well. While retrieving the argument's enums, you can assign one of the [types](#types) to it.
+
+```ts
+functionInfo('$addB').then(info => {
+    if (info && info.args) {
+        for (const arg of info.args) {
+            if (arg.enumData) {
+                const enums: AddButtonEnums = arg.enumData;
+                // ^ ["primary", "secondary", "success", "danger", "link"]
+            }
         }
-    ],
-    "intents": "None",
-    "premium": false
-}
+    }
+});
 ```
 
-### functionList()
-```json
-[   
-    ...,
-    {
-        "tag": "$userJoinedDiscord[User ID;(Format)]",
-        "description": "Returns date when given user joined discord. You can also give your own date format",
-        "arguments": [
-            {
-                "name": "User ID",
-                "type": "Snowflake",
-                "required": true
-            },
-            {
-                "name": "Format",
-                "description": "Uses GoLang date format",
-                "type": "String",
-                "required": false
-            }
-        ],
-        "intents": "None",
-        "premium": false
-    },
-    {
-        "tag": "$userJoined[User ID;(Format)]",
-        "description": "Returns date when given user joined the guild. You can also give your own date format",
-        "arguments": [
-            {
-                "name": "User ID",
-                "type": "Snowflake",
-                "required": true
-            },
-            {
-                "name": "Format",
-                "description": "Uses GoLang date format",
-                "type": "String",
-                "required": false
-            }
-        ],
-        "intents": "Members",
-        "premium": false
-    },
-    ...
-]
-```
+#### Types
+|           Name             |        Example Function     |
+| :------------------------: | :-------------------------: |
+| AddButtonEnums             | `$addButton[]`              |
+| ModalEnums                 | `$addTextInput[]`           |
+| CategoryEnums              | `$categoryChannels[]`       |
+| ChannelEnums               | `$createChannel[]`          |
+| EditButtonEnums            | `$editButton[]`             |
+| ErrorEnums                 | `$error[]`                  |
+| CooldownEnums              | `$getCooldown[]`            |
+| EmbedDataEnums             | `$getEmbedData[]`           |
+| InviteInfoEnums            | `$getInviteInfo[]`          |
+| LeaderboardTypeEnums       | `$getLeaderboardValue[]`*   |
+| SortEnums                  | `$getLeaderboardValue[]`**  |
+| LeaderboardReturnTypeEnums | `$getLeaderboardValue[]`*** |
+| MessageDataEnums           | `$getMessage[]`             |
+| TimestampEnums             | `$getTimestamp[]`           |
+| MembersCountEnums          | `$membersCount[]`           |
+| UrlEnums                   | `$url[]`                    |
+| VariablesCountEnums        | `$variablesCount[]`         |
 
-### functionTagList()
-```json
-[
-    ...,
-    "$userInfo[]",
-    "$userJoinedDiscord[]",
-    "$userJoined[]",
-    "$userLeaderboard[]",
-    "$userPerms[]",
-    "$userReacted[]",
-    "$userRoles[]",
-    "$userServerAvatar[]",
-    "$username",
-    "$username[]",
-    "$varExistError[]",
-    "$varExists[]",
-    "$var[]",
-    "$variablesCount[]",
-    "$webhookAvatarURL[]",
-    "$webhookColor[]",
-    "$webhookContent[]",
-    "$webhookCreate[]",
-    "$webhookDelete[]",
-    "$webhookDescription[]",
-    "$webhookFooter[]",
-    "$webhookSend[]",
-    "$webhookTitle[]",
-    "$webhookUsername[]",
-    "$year"
-]
-```
-
-</details>
+> \* - The `Variable type` argument of the function.\
+> \*\* - The `Sort` argument of the function.\
+> \*\*\* - The `Return type` argument of the function.

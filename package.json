@@ -1,7 +1,7 @@
 {
   "name": "@nightnutsky/bpapi",
-  "version": "1.1.0",
-  "description": "BPAPI allows you to retrieve and work with information from BDFD Public API more easier",
+  "version": "2.0.0",
+  "description": "BPAPI allows you to work with BDFD Public API more easier and pretty!",
   "author": "NightNutSky",
   "main": "dist/index.js",
   "types": "types/types.d.ts",
