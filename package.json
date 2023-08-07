@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "types/types.d.ts",
   "repository": {
-    "url": "https://github.com/NightNutSky/bpapi"
+    "url": "https://github.com/synthexia/bpapi-wrapper"
   },
   "scripts": {
     "build": "tsc -p ."
