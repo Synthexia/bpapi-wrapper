@@ -1,8 +1,8 @@
 {
-  "name": "@nightnutsky/bpapi",
-  "version": "2.0.0",
-  "description": "BPAPI allows you to work with BDFD Public API more easier and pretty!",
-  "author": "NightNutSky",
+  "name": "@synthexia/bpapi-wrapper",
+  "version": "3.0.0",
+  "description": "BPAPI Wrapper allows you to work with BDFD Public API more easier and pretty!",
+  "author": "Kitomanari",
   "main": "dist/index.js",
   "types": "types/types.d.ts",
   "repository": {
@@ -12,17 +12,18 @@
     "build": "tsc -p ."
   },
   "keywords": [
+    "bds",
+    "bdscript",
     "bdfd",
-    "bdfdapi",
-    "bdfd-api",
-    "bdfdpublicapi",
-    "bdfd-public-api"
+    "bpapi"
   ],
   "license": "MIT",
   "dependencies": {
-    "centra": "^2.6.0"
+    "centra": "^2.6.0",
+    "jsdom": "^22.1.0"
   },
   "devDependencies": {
-    "@types/centra": "^2.2.0"
+    "@types/centra": "^2.2.0",
+    "@types/jsdom": "^21.1.1"
   }
 }

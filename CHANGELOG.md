@@ -2,6 +2,15 @@
 
 ## 2023
 
+### July
+
+#### 3.0.0
+> Breaking Changes
+- Package Renamed
+- Source Code Refactoring
+- Implemented Nodes Endpoint
+- Updated README
+
 ### April
 
 #### 2.0.0
