@@ -1,5 +1,12 @@
 # Changelog
 
+## 2024
+
+### January
+
+#### 4.0.0
+- Source Code Refactoring
+
 ## 2023
 
 ### July

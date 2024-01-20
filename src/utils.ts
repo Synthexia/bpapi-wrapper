@@ -1,24 +1,30 @@
-import { Functions, Callbacks } from ".";
-import { Intents, RawIntents, type Callback, type Function, type Node, Target } from "../types/types";
+import {
+    type Function,
+    type Callback,
+    type Node,
+    Functions,
+    Callbacks
+} from ".";
+import { Intents, RawIntents, Target } from "./enums";
 
-export async function findTag(target: Target, tag: string) {
+export async function findTag(target: Target.Functions | Target.Callbacks, tag: string): Promise<string | undefined> {
     let tags: string[];
 
     switch (target) {
         case Target.Functions:
-            tags = ( <string[]> await Functions.tagList() )!;
+            tags = await Functions.tagList();
             break;
         case Target.Callbacks:
-            tags = ( <string[]> await Callbacks.tagList() )!;
+            tags = await Callbacks.tagList();
             break;
     }
 
-    for (const t of tags!) {
+    for (const t of tags) {
         if (t.includes(tag)) return t;
     }
 }
 
-export function intentsSwitcher(raw: number) {
+export function intentsSwitcher(raw: RawIntents): Intents {
     switch (raw) {
         case RawIntents.Presence:
             return Intents.Presence;
@@ -29,14 +35,29 @@ export function intentsSwitcher(raw: number) {
     }
 }
 
-/**
- * 
- * @param target `Target.Nodes` isn't used here. `Target.Callbacks` by default.
- */
-export function buildInfo(response: Function.Response | Callback.Response, target?: Target) {
-    switch (target) {
+export function buildInfo(params: {
+    target: Target.Functions,
+    response: Function.Response
+}): Function.Info;
+export function buildInfo(params: {
+    target: Target.Callbacks,
+    response: Callback.Response
+}): Callback.Info;
+
+export function buildInfo(
+    params:
+        | { target: Target.Functions, response: Function.Response }
+        | { target: Target.Callbacks, response: Callback.Response }
+) {
+    switch (params.target) {
         case Target.Functions:
-            const { tag, shortDescription, premium, intents: functionIntents, arguments: functionArgs } = <Function.Response> response;
+            const {
+                tag,
+                shortDescription,
+                premium,
+                intents: functionIntents,
+                arguments: functionArgs
+            } = params.response;
 
             return <Function.Info> {
                 tag,
@@ -45,8 +66,14 @@ export function buildInfo(response: Function.Response | Callback.Response, targe
                 intents: intentsSwitcher(functionIntents),
                 premium
             };
-        default:
-            const { name, description, is_premium, intents: callbackIntents, arguments: callbackArgs} = <Callback.Response> response;
+        case Target.Callbacks:
+            const {
+                name,
+                description,
+                is_premium,
+                intents: callbackIntents,
+                arguments: callbackArgs
+            } = params.response;
 
             return <Callback.Info> {
                 name,
@@ -65,11 +92,11 @@ export function parseBody(bodyElementChildren: HTMLCollection): Node.Stats {
     const botCount = botCountElement.textContent!;
     const ping = pingElement.textContent!;
     const status = statusElement.textContent!
-    .replaceAll('\n', '')
-    .replaceAll('\t', '')
-    .replaceAll(' ', '');
+        .replaceAll('\n', '')
+        .replaceAll('\t', '')
+        .replaceAll(' ', '');
 
-    return {
+    return <Node.Stats> {
         nodeId,
         text: `Server #${nodeId} is ${status} (${ping}): ${botCount} bots online`,
         rawStats: { botCount, ping, status }
