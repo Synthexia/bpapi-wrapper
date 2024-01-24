@@ -1,6 +1,6 @@
 {
   "name": "@synthexia/bpapi-wrapper",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "BPAPI Wrapper allows you to work with BDFD Public API more easier and pretty!",
   "author": "Kitomanari",
   "main": "./dist/index.js",
@@ -9,7 +9,7 @@
     "url": "https://github.com/synthexia/bpapi-wrapper"
   },
   "scripts": {
-    "build": "tsc -p ."
+    "build": "tsc -p . && pnpm pack"
   },
   "keywords": [
     "bds",
@@ -20,11 +20,11 @@
   "license": "MIT",
   "dependencies": {
     "centra": "^2.6.0",
-    "jsdom": "^22.1.0"
+    "jsdom": "^24.0.0"
   },
   "devDependencies": {
-    "@types/centra": "^2.2.0",
-    "@types/jsdom": "^21.1.1"
+    "@types/centra": "^2.2.3",
+    "@types/jsdom": "^21.1.6"
   },
   "packageManager": "pnpm@8.14.1"
 }
